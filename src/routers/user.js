@@ -1,8 +1,23 @@
-const express = require('express');
-const router = express.Router();
+import express from "express";
+import * as authController from '../controllers/user.js';
+import { body } from 'express-validator';
+import { validate } from "../middlewares/validator.js";
+import { isAuth } from '../middlewares/user.js';
 
-router.get('/', (req, res) => {
-    res.send('Hello, User!');
+const router = express.Router()
+
+
+router.delete('/:userid', isAuth, authController.del_user);
+
+router.post('/signup', authController.signup);
+
+router.post('/login', authController.login);
+
+router.get('/:userid', authController.me);
+
+// verifyToken
+router.get('/verifyToken', isAuth, req, res => {
+    res.json({ success: true, user: req.user });
 });
 
-module.exports = router;
+export default router
